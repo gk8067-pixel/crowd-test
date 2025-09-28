@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:${API_PORT:-8000}
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - YOUTUBE_API_KEY=${YOUTUBE_API_KEY}
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+      - redis
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.worker
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - YOUTUBE_API_KEY=${YOUTUBE_API_KEY}
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+      - redis
+      - api
+
+  # Optional: Include if you don't have local db/redis
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=crowdtest
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=app
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
