@@ -287,3 +287,15 @@ def normalize_url_endpoint(url: str):
         "original": url,
         "normalized": normalized
     }
+# === attach CORS & survey routes (append) ===
+from fastapi.middleware.cors import CORSMiddleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000","http://127.0.0.1:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    allow_credentials=True,
+)
+
+from .survey_routes import router as survey_router
+app.include_router(survey_router)
