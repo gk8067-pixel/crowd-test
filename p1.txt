@@ -1,0 +1,13 @@
+cd ~/crowd-test
+
+# 後端
+mkdir -p api/migrations/versions
+
+# 前端（你的清單是 frontend/，我們就用它）
+mkdir -p frontend/app/surveys/[id]
+mkdir -p frontend/app
+mkdir -p frontend/lib
+mkdir -p frontend/types
+
+# 其他
+mkdir -p scripts
