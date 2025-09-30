@@ -1,2 +1,26 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+api/.venv/
+*.egg-info/
+*.pytest_cache/
+.mypy_cache/
+
+# --- Env / secrets ---
 .env
-infra/pgdata/
+*.env
+frontend/.env.local
+
+# --- Node / Next.js ---
+frontend/node_modules/
+frontend/.next/
+npm-debug.log*
+yarn-error.log*
+
+# --- OS 垃圾 ---
+.DS_Store
+
+# --- 其他不需要上版控的暫存 ---
+uv.lock
